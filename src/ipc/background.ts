@@ -24,13 +24,15 @@ export default class BackgroundIpc extends IPC {
     });
   }
 
-  /**
-   * background will always send message to the proxy in content script
-   */
   protected setupSender(): EventSender {
     return async (payload) => {
-      const tab = await getCurrentTab();
-      chrome.tabs.sendMessage(tab.id!, payload);
+      if (payload.destination === "background") {
+        chrome.runtime.sendMessage(payload);
+      } else {
+        // background will always send message to the proxy in content script
+        const tab = await getCurrentTab();
+        chrome.tabs.sendMessage(tab.id!, payload);
+      }
     };
   }
 }

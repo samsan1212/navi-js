@@ -56,6 +56,8 @@ export default class ContentScriptIpc extends IPC {
           break;
         case "injected":
           globalThis.postMessage(payload, "*");
+        case "content":
+          globalThis.postMessage(payload, "*");
         default:
       }
     };
